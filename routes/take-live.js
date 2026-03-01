@@ -675,7 +675,6 @@ async function fetchAndPushTenantData(
           "team_members",
           [
             "id",
-            "tenant_id",
             "calendar_color",
             "created_at",
             "email",
