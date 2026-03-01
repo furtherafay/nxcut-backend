@@ -373,49 +373,49 @@ async function fetchAndPushTenantData(
   }
 
   // SERVICE TEMPLATES
-  const { data: serviceTemplates, error: serviceTemplatesError } =
-    await middlewareSupabase
-      .from("service_templates")
-      .select(
-        `
-    id,
-    name,
-    description,
-    category,
-    master_category,
-    base_duration_minutes,
-    created_at,
-    updated_at
-  `,
-      )
-      .eq("tenant_id", tenantId); // Remove this if templates are global
+  // const { data: serviceTemplates, error: serviceTemplatesError } =
+  //   await middlewareSupabase
+  //     .from("service_templates")
+  //     .select(
+  //       `
+  //   id,
+  //   name,
+  //   description,
+  //   category,
+  //   master_category,
+  //   base_duration_minutes,
+  //   created_at,
+  //   updated_at
+  // `,
+  //     )
+  //     .eq("tenant_id", tenantId); // Remove this if templates are global
 
-  if (serviceTemplatesError) {
-    throw new Error(
-      `Failed to fetch service_templates: ${serviceTemplatesError.message}`,
-    );
-  }
+  // if (serviceTemplatesError) {
+  //   throw new Error(
+  //     `Failed to fetch service_templates: ${serviceTemplatesError.message}`,
+  //   );
+  // }
 
-  if (serviceTemplates && serviceTemplates.length > 0) {
-    serviceTemplates.forEach((template) => {
-      sqlStatements.push(
-        formatInsertStatement(
-          "service_templates",
-          [
-            "id",
-            "name",
-            "description",
-            "category",
-            "master_category",
-            "base_duration_minutes",
-            "created_at",
-            "updated_at",
-          ],
-          template,
-        ),
-      );
-    });
-  }
+  // if (serviceTemplates && serviceTemplates.length > 0) {
+  //   serviceTemplates.forEach((template) => {
+  //     sqlStatements.push(
+  //       formatInsertStatement(
+  //         "service_templates",
+  //         [
+  //           "id",
+  //           "name",
+  //           "description",
+  //           "category",
+  //           "master_category",
+  //           "base_duration_minutes",
+  //           "created_at",
+  //           "updated_at",
+  //         ],
+  //         template,
+  //       ),
+  //     );
+  //   });
+  // }
 
   // SERVICES
   const { data: services, error: servicesError } = await middlewareSupabase
@@ -443,7 +443,6 @@ async function fetchAndPushTenantData(
   updated_at,
   use,
   voucher_sales,
-  template_id,
   is_active
 `,
     )
@@ -480,7 +479,6 @@ async function fetchAndPushTenantData(
             "updated_at",
             "use",
             "voucher_sales",
-            "template_id",
             "is_active",
           ],
           service,
