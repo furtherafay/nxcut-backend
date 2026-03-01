@@ -442,7 +442,7 @@ async function fetchAndPushTenantData(
   treatment_type,
   updated_at,
   use,
-  voucher_sales,
+  voucher_sales
 `,
     )
     .eq("tenant_id", tenantId);
