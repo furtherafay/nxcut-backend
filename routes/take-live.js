@@ -343,6 +343,152 @@ async function fetchAndPushTenantData(
     });
   }
 
+  // CATEGORIES
+  const { data: categories, error: categoriesError } = await middlewareSupabase
+    .from("categories")
+    .select(
+      `
+    id,
+    created_at,
+    name,
+    "photoUrl"
+  `,
+    )
+    .eq("tenant_id", tenantId);
+
+  if (categoriesError) {
+    throw new Error(`Failed to fetch categories: ${categoriesError.message}`);
+  }
+
+  if (categories && categories.length > 0) {
+    categories.forEach((category) => {
+      sqlStatements.push(
+        formatInsertStatement(
+          "categories",
+          ["id", "created_at", "name", '"photoUrl"'],
+          category,
+        ),
+      );
+    });
+  }
+
+  // SERVICE TEMPLATES
+  const { data: serviceTemplates, error: serviceTemplatesError } =
+    await middlewareSupabase
+      .from("service_templates")
+      .select(
+        `
+    id,
+    name,
+    description,
+    category,
+    master_category,
+    base_duration_minutes,
+    created_at,
+    updated_at
+  `,
+      )
+      .eq("tenant_id", tenantId); // Remove this if templates are global
+
+  if (serviceTemplatesError) {
+    throw new Error(
+      `Failed to fetch service_templates: ${serviceTemplatesError.message}`,
+    );
+  }
+
+  if (serviceTemplates && serviceTemplates.length > 0) {
+    serviceTemplates.forEach((template) => {
+      sqlStatements.push(
+        formatInsertStatement(
+          "service_templates",
+          [
+            "id",
+            "name",
+            "description",
+            "category",
+            "master_category",
+            "base_duration_minutes",
+            "created_at",
+            "updated_at",
+          ],
+          template,
+        ),
+      );
+    });
+  }
+
+  // SERVICES
+  const { data: services, error: servicesError } = await middlewareSupabase
+    .from("services")
+    .select(
+      `
+  id,
+  available_for,
+  available_online,
+  category,
+  commissions,
+  created_at,
+  description,
+  duration_minutes,
+  extra_time,
+  master_category,
+  name,
+  online_booking,
+  price,
+  resource,
+  service_id,
+  sku,
+  tax,
+  treatment_type,
+  updated_at,
+  use,
+  voucher_sales,
+  template_id,
+  is_active
+`,
+    )
+    .eq("tenant_id", tenantId);
+
+  if (servicesError) {
+    throw new Error(`Failed to fetch services: ${servicesError.message}`);
+  }
+
+  if (services && services.length > 0) {
+    services.forEach((service) => {
+      sqlStatements.push(
+        formatInsertStatement(
+          "services",
+          [
+            "id",
+            "available_for",
+            "available_online",
+            "category",
+            "commissions",
+            "created_at",
+            "description",
+            "duration_minutes",
+            "extra_time",
+            "master_category",
+            "name",
+            "online_booking",
+            "price",
+            "resource",
+            "service_id",
+            "sku",
+            "tax",
+            "treatment_type",
+            "updated_at",
+            "use",
+            "voucher_sales",
+            "template_id",
+            "is_active",
+          ],
+          service,
+        ),
+      );
+    });
+  }
+
   // MEMBERSHIPS
   const { data: memberships, error: membershipsError } =
     await middlewareSupabase
