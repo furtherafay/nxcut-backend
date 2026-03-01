@@ -443,7 +443,6 @@ async function fetchAndPushTenantData(
   updated_at,
   use,
   voucher_sales,
-  is_active
 `,
     )
     .eq("tenant_id", tenantId);
@@ -479,7 +478,6 @@ async function fetchAndPushTenantData(
             "updated_at",
             "use",
             "voucher_sales",
-            "is_active",
           ],
           service,
         ),
