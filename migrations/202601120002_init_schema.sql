@@ -3087,6 +3087,17 @@ CREATE TABLE IF NOT EXISTS "public"."locations" (
 ALTER TABLE "public"."locations" OWNER TO "postgres";
 
 
+CREATE TABLE IF NOT EXISTS "public"."categories" (
+    "id" "text" DEFAULT "public"."gen_alphanum_id"() NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now"(),
+    "name" "text" NOT NULL,
+    "photoUrl" "text"
+);
+
+
+ALTER TABLE "public"."categories" OWNER TO "postgres";
+
+
 CREATE TABLE IF NOT EXISTS "public"."memberships" (
     "id" "text" DEFAULT "public"."gen_alphanum_id"() NOT NULL,
     "name" "text" NOT NULL,

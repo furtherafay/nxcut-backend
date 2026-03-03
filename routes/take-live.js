@@ -1005,17 +1005,23 @@ router.post("/", async (req, res) => {
         if (tenantAuthUser) {
           const { error: authMemberError } = await middlewareSupabase
             .from("tenant_auth_members")
-            .insert({
-              tenant_id: tenantId,
-              supabase_user_id: tenantAuthUser.id,
-              user_email: tenant.email,
-            });
+            .upsert(
+              {
+                tenant_id: tenantId,
+                supabase_user_id: tenantAuthUser.id,
+                user_email: tenant.email,
+              },
+              { onConflict: "user_email" },
+            );
 
           if (authMemberError) {
-            console.error(
-              "Failed to create tenant_auth_members entry:",
-              authMemberError,
-            );
+            // Ignore duplicate key (23505) - entry already exists
+            if (authMemberError.code !== "23505") {
+              console.error(
+                "Failed to create tenant_auth_members entry:",
+                authMemberError,
+              );
+            }
           }
         } else {
           console.warn(
