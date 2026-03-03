@@ -453,6 +453,12 @@ async function fetchAndPushTenantData(
 
   if (services && services.length > 0) {
     services.forEach((service) => {
+      // Schema requires NOT NULL for category and treatment_type; default for nulls from source
+      const row = {
+        ...service,
+        category: service.category ?? "",
+        treatment_type: service.treatment_type ?? "",
+      };
       sqlStatements.push(
         formatInsertStatement(
           "services",
@@ -479,7 +485,7 @@ async function fetchAndPushTenantData(
             "use",
             "voucher_sales",
           ],
-          service,
+          row,
         ),
       );
     });
