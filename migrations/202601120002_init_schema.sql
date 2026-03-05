@@ -3155,6 +3155,21 @@ ALTER SEQUENCE "public"."payment_methods_id_seq" OWNER TO "postgres";
 ALTER SEQUENCE "public"."payment_methods_id_seq" OWNED BY "public"."payment_methods"."id";
 
 
+INSERT INTO "public"."payment_methods" ("id", "name", "is_active", "created_at")
+SELECT v.id, v.name, v.is_active, v.created_at
+FROM (VALUES
+    (3, 'Cash'::text, true, '2026-01-08 10:37:50.929354'::timestamp without time zone),
+    (4, 'Card'::text, true, '2026-01-08 10:37:50.929354'::timestamp without time zone),
+    (5, 'Voucher'::text, true, '2026-01-08 10:37:50.929354'::timestamp without time zone),
+    (6, 'Membership'::text, true, '2026-01-08 10:37:50.929354'::timestamp without time zone),
+    (7, 'Online'::text, true, '2026-01-08 10:37:50.929354'::timestamp without time zone),
+    (9, 'Split Payment'::text, true, '2026-01-09 05:52:16.382644'::timestamp without time zone)
+) AS v(id, name, is_active, created_at)
+WHERE NOT EXISTS (SELECT 1 FROM "public"."payment_methods" pm WHERE pm.name = v.name);
+
+
+SELECT setval('"public"."payment_methods_id_seq"', (SELECT COALESCE(MAX(id), 1) FROM "public"."payment_methods"));
+
 
 CREATE TABLE IF NOT EXISTS "public"."products" (
     "id" "text" DEFAULT "public"."gen_alphanum_id"() NOT NULL,
