@@ -223,7 +223,7 @@ async function createAuthUserInTenant(
     },
   });
 
-  const { error } = await tenantSupabase.auth.admin.createUser({
+  const { data, error } = await tenantSupabase.auth.admin.createUser({
     email,
     password,
     email_confirm: true,
@@ -231,6 +231,19 @@ async function createAuthUserInTenant(
 
   if (error) {
     throw new Error(`Failed to create auth user: ${error.message}`);
+  }
+
+  if (data?.user) {
+    const { error: metaDataError } =
+      await tenantSupabase.auth.admin.updateUserById(data.user.id, {
+        user_metadata: { is_admin: true },
+      });
+    if (metaDataError) {
+      console.warn(
+        "Failed to set is_admin on auth user:",
+        metaDataError.message,
+      );
+    }
   }
 }
 
