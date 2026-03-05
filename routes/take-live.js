@@ -654,7 +654,7 @@ async function fetchAndPushTenantData(
   if (paymentMethods && paymentMethods.length > 0) {
     paymentMethods.forEach((pm) => {
       sqlStatements.push(
-        `INSERT INTO public.payment_methods (id, created_at, is_active, name) VALUES (${pm.id}, ${escapeSqlString(pm.created_at)}, ${escapeSqlString(pm.is_active)}, ${escapeSqlString(pm.name)});`,
+        `INSERT INTO public.payment_methods (id, created_at, is_active, name) VALUES (${pm.id}, ${escapeSqlString(pm.created_at)}, ${escapeSqlString(pm.is_active)}, ${escapeSqlString(pm.name)}) ON CONFLICT (name) DO NOTHING;`,
       );
     });
   }
